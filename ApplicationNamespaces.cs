@@ -14,3 +14,5 @@ global using Hotels.Models;
 global using Hotels.Configuration;
 
 global using Hotels.Repositories;
+
+global using Hotels.HotelService;
