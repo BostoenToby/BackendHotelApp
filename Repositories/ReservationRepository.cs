@@ -1,4 +1,5 @@
 namespace Hotels.Repositories;
+
 public interface IReservationRepository
 {
     Task<Reservation> AddReservation(Reservation newReservation);
@@ -6,7 +7,7 @@ public interface IReservationRepository
     Task<List<Reservation>> GetAllReservations();
     Task<Reservation> GetReservationById(string Id);
     Task<List<Reservation>> GetReservationsByName(string Name, string FirstName);
-    Task<Reservation> UpdateReservation(Reservation reservation, string Id);
+    Task<Reservation> UpdateReservation(Reservation reservation);
 }
 
 public class ReservationRepository : IReservationRepository
@@ -30,14 +31,14 @@ public class ReservationRepository : IReservationRepository
     }
 
     //PUT
-    public async Task<Reservation> UpdateReservation(Reservation reservation, string Id)
+    public async Task<Reservation> UpdateReservation(Reservation reservation)
     {
         try
         {
-            var filter = Builders<Reservation>.Filter.Eq("Id", Id);
+            var filter = Builders<Reservation>.Filter.Eq("Id", reservation.Id);
             var update = Builders<Reservation>.Update.Set("Name", reservation.Name).Set("FirstName", reservation.FirstName).Set("BirthDate", reservation.BirthDate).Set("EMail", reservation.EMail).Set("Hotel", reservation.Hotel).Set("NumberOfRooms", reservation.NumberOfRooms).Set("DateOfReservation", reservation.DateOfReservation).Set("Review", reservation.Review).Set("TotalPrice", reservation.TotalPrice);
             var result = await _context.ReservationCollection.UpdateOneAsync(filter, update);
-            return await GetReservationById(Id);
+            return await GetReservationById(reservation.Id);
         }
         catch (System.Exception ex)
         {

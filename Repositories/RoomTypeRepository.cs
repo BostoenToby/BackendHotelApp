@@ -7,7 +7,7 @@ public interface IRoomTypeRepository
     Task<List<RoomType>> GetAllRoomTypes();
     Task<RoomType> GetRoomTypeById(string Id);
     Task<List<RoomType>> GetRoomTypesByNamePiece(string NamePiece);
-    Task<RoomType> UpdateRoomType(RoomType roomType, string Id);
+    Task<RoomType> UpdateRoomType(RoomType roomType);
 }
 
 public class RoomTypeRepository : IRoomTypeRepository
@@ -44,11 +44,11 @@ public class RoomTypeRepository : IRoomTypeRepository
     }
 
     //PUT
-    public async Task<RoomType> UpdateRoomType(RoomType roomType, string Id)
+    public async Task<RoomType> UpdateRoomType(RoomType roomType)
     {
         try
         {
-            var filter = Builders<RoomType>.Filter.Eq("Id", Id);
+            var filter = Builders<RoomType>.Filter.Eq("Id", roomType.Id);
             var update = Builders<RoomType>.Update.Set("Name", roomType.Name).Set("NumberOfBeds", roomType.NumberOfBeds).Set("SquareMeters", roomType.SquareMeters).Set("Television", roomType.Television).Set("Breakfast", roomType.Breakfast).Set("Airco", roomType.Airco).Set("Wifi", roomType.Wifi).Set("View", roomType.View);
             var result = await _context.RoomTypeCollection.UpdateOneAsync(filter, update);
             return await GetRoomTypeById(roomType.Id);

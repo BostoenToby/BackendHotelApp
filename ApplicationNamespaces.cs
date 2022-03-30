@@ -10,6 +10,10 @@ global using MongoDB.Bson.Serialization.Attributes;
 global using MongoDB.Driver;
 global using Mongo.Context;
 
+//FluentValidation
+global using FluentValidation;
+global using FluentValidation.AspNetCore;
+
 //Customer
 global using Hotels.Models;
 
@@ -18,3 +22,5 @@ global using Hotels.Configuration;
 global using Hotels.Repositories;
 
 global using Hotels.HotelService;
+
+global using Hotels.Validators;

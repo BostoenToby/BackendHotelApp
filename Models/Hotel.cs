@@ -13,9 +13,9 @@ public class Hotel
     public string? Description { get; set; }
     public float? StarRating { get; set; }
     public string[]? Images { get; set; }
-    public double Longitude { get; set; }
-    public double Latitude { get; set; }
-    public double PricePerNightMin { get; set; }
-    public double PricePerNightMax { get; set; }
-    public Review[]? Reviews { get; set; }
+    public decimal Longitude { get; set; }
+    public decimal Latitude { get; set; }
+    public decimal PricePerNightMin { get; set; }
+    public decimal PricePerNightMax { get; set; }
+    public List<Review>? Reviews { get; set; }
 }

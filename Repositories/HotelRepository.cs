@@ -7,7 +7,7 @@ public interface IHotelRepository
     Task<List<Hotel>> GetAllHotels();
     Task<Hotel> GetHotelById(string Id);
     Task<List<Hotel>> GetHotelsByNamePiece(string NamePiece);
-    Task<Hotel> UpdateHotel(Hotel hotel, string Id);
+    Task<Hotel> UpdateHotel(Hotel hotel);
 }
 
 public class HotelRepository : IHotelRepository
@@ -43,11 +43,11 @@ public class HotelRepository : IHotelRepository
     }
 
     //PUT
-    public async Task<Hotel> UpdateHotel(Hotel hotel, string Id)
+    public async Task<Hotel> UpdateHotel(Hotel hotel)
     {
         try
         {
-            var filter = Builders<Hotel>.Filter.Eq("Id", Id);
+            var filter = Builders<Hotel>.Filter.Eq("Id", hotel.Id);
             var update = Builders<Hotel>.Update.Set("Name", hotel.Name).Set("City", hotel.City).Set("Address", hotel.Address).Set("Province", hotel.Province).Set("Description", hotel.Description).Set("StarRating", hotel.StarRating).Set("Images", hotel.Images).Set("Longitude", hotel.Longitude).Set("Latitude", hotel.Latitude).Set("PricePerNightMin", hotel.PricePerNightMin).Set("PricePerNightMax", hotel.PricePerNightMax);
             var result = await _context.HotelsCollection.UpdateOneAsync(filter, update);
             return await GetHotelById(hotel.Id);

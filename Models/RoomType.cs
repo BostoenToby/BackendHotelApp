@@ -7,8 +7,8 @@ public class RoomType
 
     public string? Id { get; set; }
     public string Name { get; set; }
-    public int? NumberOfBeds { get; set; } 
-    public float? SquareMeters { get; set; }
+    public int NumberOfBeds { get; set; } 
+    public float SquareMeters { get; set; }
     public bool Television { get; set; } //stel television = true --> alleen roomtypes met television, maar als television = false --> alle roomtypes zowel waar true als false
     public bool Breakfast { get; set; }
     public bool Airco { get; set; }

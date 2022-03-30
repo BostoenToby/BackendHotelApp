@@ -5,9 +5,9 @@ public interface IReviewRepository
     Task<Review> AddReview(Review newReview);
     Task<string> DeleteReview(string Id);
     Task<List<Review>> GetAllReviews();
-    Task<List<Review>> GetReviewsByAuthor(string Author);
     Task<Review> GetReviewById(string Id);
-    Task<Review> UpdateReview(Review review, string Id);
+    Task<List<Review>> GetReviewsByAuthor(string Author);
+    Task<Review> UpdateReview(Review review);
 }
 
 public class ReviewRepository : IReviewRepository
@@ -31,14 +31,14 @@ public class ReviewRepository : IReviewRepository
     }
 
     //PUT
-    public async Task<Review> UpdateReview(Review review, string Id)
+    public async Task<Review> UpdateReview(Review review)
     {
         try
         {
-            var filter = Builders<Review>.Filter.Eq("Id", Id);
+            var filter = Builders<Review>.Filter.Eq("Id", review.Id);
             var update = Builders<Review>.Update.Set("Author", review.Author).Set("StarRating", review.StarRating).Set("Image", review.Image).Set("ReviewDescription", review.ReviewDescription);
             var result = await _context.ReviewsCollection.UpdateOneAsync(filter, update);
-            return await GetReviewById(Id);
+            return await GetReviewById(review.Id);
         }
         catch (System.Exception ex)
         {
