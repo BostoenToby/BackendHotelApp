@@ -6,6 +6,6 @@ public class DatabaseSettings
     public string? DatabaseName { get; set; }
     public string? HotelsCollection { get; set; }
     public string? ReviewsCollection { get; set; }
-    public string? ReservationCollection { get; set; }
-    public string? RoomTypeCollection { get; set; }
+    public string? ReservationsCollection { get; set; }
+    public string? RoomTypesCollection { get; set; }
 }

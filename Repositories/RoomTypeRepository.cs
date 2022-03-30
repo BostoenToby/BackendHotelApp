@@ -2,55 +2,77 @@ namespace Hotels.Repositories;
 
 public interface IRoomTypeRepository
 {
-    Task AddRoomType(RoomType newRoomType);
-    Task DeleteRoomType(string Id);
+    Task<RoomType> AddRoomType(RoomType newRoomType);
+    Task<string> DeleteRoomType(string Id);
     Task<List<RoomType>> GetAllRoomTypes();
     Task<RoomType> GetRoomTypeById(string Id);
-    Task<RoomType> GetRoomTypeByName(string Name);
-    Task<List<RoomType>> GetRoomTypesByNumberOfBeds(int NumberOfBeds);
-    Task<RoomType> UpdateRoomType(RoomType roomType);
+    Task<List<RoomType>> GetRoomTypesByNamePiece(string NamePiece);
+    Task<RoomType> UpdateRoomType(RoomType roomType, string Id);
 }
 
 public class RoomTypeRepository : IRoomTypeRepository
 {
     private readonly IMongoContext _context;
-
     public RoomTypeRepository(IMongoContext context)
     {
         _context = context;
     }
 
-    public async Task<List<RoomType>> GetAllRoomTypes() => await _context.RoomTypeCollection.Find(_ => true).ToListAsync();
-    public async Task<RoomType> GetRoomTypeById(string Id) => await _context.RoomTypeCollection.Find(c => c.Id == Id).FirstOrDefaultAsync();
-    public async Task<RoomType> GetRoomTypeByName(string Name) => await _context.RoomTypeCollection.Find(c => c.Name == Name).FirstOrDefaultAsync();
-    public async Task<List<RoomType>> GetRoomTypesByNumberOfBeds(int NumberOfBeds) => await _context.RoomTypeCollection.Find(c => c.NumberOfBeds == NumberOfBeds).ToListAsync();
-    public async Task AddRoomType(RoomType newRoomType) => await _context.RoomTypeCollection.InsertOneAsync(newRoomType);
-    public async Task<RoomType> UpdateRoomType(RoomType roomType)
+    //GET
+    public async Task<List<RoomType>> GetAllRoomTypes() => await _context.RoomTypeCollection.Find<RoomType>(_ => true).ToListAsync();
+    public async Task<List<RoomType>> GetRoomTypesByNamePiece(string NamePiece)
+    {
+        List<RoomType> AllRoomTypes = await GetAllRoomTypes();
+        List<RoomType> ApprovedRoomTypes = new List<RoomType>();
+
+        foreach (RoomType roomType in AllRoomTypes)
+        {
+            if (roomType.Name.Contains(NamePiece))
+            {
+                ApprovedRoomTypes.Add(roomType);
+            }
+        }
+        return ApprovedRoomTypes;
+    }
+    public async Task<RoomType> GetRoomTypeById(string Id) => await _context.RoomTypeCollection.Find<RoomType>(c => c.Id == Id).FirstOrDefaultAsync();
+
+    //POST
+    public async Task<RoomType> AddRoomType(RoomType newRoomType)
+    {
+        await _context.RoomTypeCollection.InsertOneAsync(newRoomType);
+        return newRoomType;
+    }
+
+    //PUT
+    public async Task<RoomType> UpdateRoomType(RoomType roomType, string Id)
     {
         try
         {
-            var filter = Builders<RoomType>.Filter.Eq("Id", roomType.Id);
-            var update = Builders<RoomType>.Update.Set("Name", roomType.Name).Set("NumberOfBeds", roomType.NumberOfBeds);
+            var filter = Builders<RoomType>.Filter.Eq("Id", Id);
+            var update = Builders<RoomType>.Update.Set("Name", roomType.Name).Set("NumberOfBeds", roomType.NumberOfBeds).Set("SquareMeters", roomType.SquareMeters).Set("Television", roomType.Television).Set("Breakfast", roomType.Breakfast).Set("Airco", roomType.Airco).Set("Wifi", roomType.Wifi).Set("View", roomType.View);
             var result = await _context.RoomTypeCollection.UpdateOneAsync(filter, update);
             return await GetRoomTypeById(roomType.Id);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             Console.WriteLine(ex);
             throw;
         }
     }
-    public async Task DeleteRoomType(string Id)
+
+    //DELETE
+    public async Task<string> DeleteRoomType(string Id)
     {
         try
         {
             var filter = Builders<RoomType>.Filter.Eq("Id", Id);
             var result = await _context.RoomTypeCollection.DeleteOneAsync(filter);
+            return "The roomtype has been removed succesfully";
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             Console.WriteLine(ex);
-            throw;
+            return "The roomtype hasn't been removed";
         }
     }
 }

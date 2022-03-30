@@ -51,13 +51,13 @@ public class MongoContext : IMongoContext
 
     public IMongoCollection<Reservation> ReservationCollection{
         get{ 
-            return _database.GetCollection<Reservation>(_settings.ReservationCollection);
+            return _database.GetCollection<Reservation>(_settings.ReservationsCollection);
         }
     }
 
     public IMongoCollection<RoomType> RoomTypeCollection{
         get{
-            return _database.GetCollection<RoomType>(_settings.RoomTypeCollection);
+            return _database.GetCollection<RoomType>(_settings.RoomTypesCollection);
         }
     }
 }

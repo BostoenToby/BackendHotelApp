@@ -1,6 +1,8 @@
 //.NET
 global using System;
 global using Microsoft.Extensions.Options;
+global using System.Collections.Generic;
+global using System.Reflection;
 
 //Nuget
 global using MongoDB.Bson;
